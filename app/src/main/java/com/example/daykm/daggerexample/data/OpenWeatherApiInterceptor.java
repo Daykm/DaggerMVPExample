@@ -20,4 +20,5 @@ public class OpenWeatherApiInterceptor implements Interceptor {
                         .build()
         );
     }
+
 }

@@ -14,4 +14,5 @@ public class RepositoryModule {
     public CityRepository cityRepository(Context context) {
         return new CityRepository(context);
     }
+
 }

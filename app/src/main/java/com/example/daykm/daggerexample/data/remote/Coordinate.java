@@ -8,4 +8,5 @@ public class Coordinate {
     public float lon;
     @Json(name = "lat")
     public float lat;
+
 }

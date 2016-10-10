@@ -3,18 +3,14 @@ package com.example.daykm.daggerexample.dagger.component;
 
 import com.example.daykm.daggerexample.dagger.modules.AppModule;
 import com.example.daykm.daggerexample.dagger.modules.PresenterModule;
-
-import javax.inject.Singleton;
+import com.example.daykm.daggerexample.dagger.scopes.ApplicationScoped;
 
 import dagger.Component;
 
 @Component(modules = AppModule.class)
-@Singleton
+@ApplicationScoped
 public interface AppComponent {
 
-
     ExamplePresenterComponent plus(PresenterModule module);
-
-
 
 }

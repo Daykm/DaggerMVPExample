@@ -30,12 +30,11 @@ public class CityRepository {
 
     public List<City> getCities() {
         try {
-            BufferedSource source = Okio.buffer(Okio.source(context.getAssets().open("city.list.us.json")));
-            Log.i("Source", source.readUtf8());
             return adapter.fromJson(Okio.buffer(Okio.source(context.getAssets().open("city.list.us.json"))));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
+
 }

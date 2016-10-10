@@ -1,6 +1,7 @@
 package com.example.daykm.daggerexample.data;
 
-public class OpenWeatherService {
+public interface OpenWeatherService {
 
+    //TODO add retrofit service methods
 
 }

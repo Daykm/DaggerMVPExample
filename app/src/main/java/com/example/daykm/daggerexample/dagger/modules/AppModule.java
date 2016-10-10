@@ -8,6 +8,7 @@ import dagger.Provides;
 
 @Module(includes = ApiModule.class)
 public class AppModule {
+
     private Context app;
 
     public AppModule(Context app) {
@@ -18,6 +19,5 @@ public class AppModule {
     public Context app() {
         return app;
     }
-
 
 }

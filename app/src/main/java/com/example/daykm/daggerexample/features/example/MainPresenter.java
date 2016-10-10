@@ -4,7 +4,6 @@ import com.example.daykm.daggerexample.data.CityRepository;
 import com.example.daykm.daggerexample.mvp.Presenter;
 
 
-
 public class MainPresenter implements Presenter {
 
     private CityRepository repo;
@@ -27,4 +26,5 @@ public class MainPresenter implements Presenter {
     public void unsubscribe() {
 
     }
+
 }

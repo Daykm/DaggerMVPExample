@@ -22,4 +22,5 @@ public class PresenterModule {
     public MainPresenter presenter(CityRepository repo) {
         return new MainPresenter(view, repo);
     }
+
 }

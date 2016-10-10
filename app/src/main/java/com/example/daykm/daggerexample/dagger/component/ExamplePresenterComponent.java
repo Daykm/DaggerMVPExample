@@ -12,4 +12,5 @@ import dagger.Subcomponent;
 public interface ExamplePresenterComponent {
 
     MainPresenter presenter();
+
 }

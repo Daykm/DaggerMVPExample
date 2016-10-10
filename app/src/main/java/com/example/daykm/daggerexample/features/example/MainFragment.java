@@ -54,4 +54,5 @@ public class MainFragment extends Fragment implements MainView {
     @Override public void setCities(List<City> cities) {
         recyclerView.setAdapter(new CityAdapter(cities));
     }
+
 }

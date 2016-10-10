@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentManager manager = getSupportFragmentManager();
 
-        if(manager.findFragmentById(R.id.main_fragment_container) == null) {
+        if (manager.findFragmentById(R.id.main_fragment_container) == null) {
             manager.beginTransaction().add(R.id.main_fragment_container, MainFragment.newInstance()).commit();
         }
     }
@@ -55,4 +55,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
