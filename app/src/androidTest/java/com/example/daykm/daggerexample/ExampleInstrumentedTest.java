@@ -4,6 +4,9 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.example.daykm.daggerexample.data.CityRepository;
+import com.example.daykm.daggerexample.data.remote.City;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,7 +23,15 @@ public class ExampleInstrumentedTest {
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
-
         assertEquals("com.example.daykm.daggerexample", appContext.getPackageName());
+    }
+
+    @Test
+    public void testParseCities() throws Exception {
+
+        for(City city : new CityRepository(InstrumentationRegistry.getTargetContext()).getCities()) {
+            System.out.println(city.name + " " + city.id);
+        }
+
     }
 }

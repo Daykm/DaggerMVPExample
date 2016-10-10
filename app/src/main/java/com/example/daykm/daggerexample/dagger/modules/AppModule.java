@@ -1,21 +1,23 @@
 package com.example.daykm.daggerexample.dagger.modules;
 
 
-import android.app.Application;
+import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module(includes = ApiModule.class)
 public class AppModule {
-    private Application app;
+    private Context app;
 
-    public AppModule(Application app) {
+    public AppModule(Context app) {
         this.app = app;
     }
 
     @Provides
-    public Application app() {
+    public Context app() {
         return app;
     }
+
+
 }

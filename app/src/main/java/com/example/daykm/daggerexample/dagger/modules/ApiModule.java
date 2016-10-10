@@ -1,6 +1,9 @@
 package com.example.daykm.daggerexample.dagger.modules;
 
 
+import android.content.Context;
+
+import com.example.daykm.daggerexample.data.CityRepository;
 import com.example.daykm.daggerexample.data.OpenWeatherApiInterceptor;
 import com.example.daykm.daggerexample.data.OpenWeatherService;
 
@@ -42,7 +45,9 @@ public class ApiModule {
     }
 
     @Provides
-    public OkHttpClient.Builder client() {
+    public OkHttpClient.Builder clientBuilder() {
        return client.newBuilder();
     }
+
+
 }
