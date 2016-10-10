@@ -1,4 +1,4 @@
-package com.example.daykm.daggerexample.features.example;
+package com.example.daykm.daggerexample.features.main;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;

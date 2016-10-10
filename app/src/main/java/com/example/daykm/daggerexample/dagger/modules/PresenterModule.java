@@ -2,8 +2,8 @@ package com.example.daykm.daggerexample.dagger.modules;
 
 
 import com.example.daykm.daggerexample.data.CityRepository;
-import com.example.daykm.daggerexample.features.example.MainPresenter;
-import com.example.daykm.daggerexample.features.example.MainView;
+import com.example.daykm.daggerexample.features.main.MainPresenter;
+import com.example.daykm.daggerexample.features.main.MainView;
 
 import dagger.Module;
 import dagger.Provides;

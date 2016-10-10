@@ -11,6 +11,6 @@ import dagger.Component;
 @ApplicationScoped
 public interface AppComponent {
 
-    ExamplePresenterComponent plus(PresenterModule module);
+    MainComponent plus(PresenterModule module);
 
 }

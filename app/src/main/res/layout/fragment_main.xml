@@ -4,5 +4,5 @@
     android:id="@+id/example_recycler_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.daykm.daggerexample.features.example.MainFragment"
+    tools:context="com.example.daykm.daggerexample.features.main.MainFragment"
     tools:showIn="@layout/activity_main" />

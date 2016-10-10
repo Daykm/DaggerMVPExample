@@ -1,4 +1,4 @@
-package com.example.daykm.daggerexample.features.example;
+package com.example.daykm.daggerexample.features.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

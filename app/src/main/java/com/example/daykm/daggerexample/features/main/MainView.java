@@ -1,4 +1,4 @@
-package com.example.daykm.daggerexample.features.example;
+package com.example.daykm.daggerexample.features.main;
 
 import com.example.daykm.daggerexample.data.remote.City;
 
