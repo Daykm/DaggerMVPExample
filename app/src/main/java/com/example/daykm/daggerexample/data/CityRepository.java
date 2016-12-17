@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import okio.BufferedSource;
 import okio.Okio;
 
@@ -21,6 +23,7 @@ public class CityRepository {
 
     private Context context;
 
+    @Inject
     public CityRepository(Context context) {
         adapter = new Moshi.Builder().build().adapter(Types.newParameterizedType(List.class, City.class));
         this.context = context;

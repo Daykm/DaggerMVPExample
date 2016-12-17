@@ -1,26 +1,28 @@
-package com.example.daykm.daggerexample;
+package com.example.daykm.daggerexample.features.app;
 
 import android.app.Application;
-import android.util.Log;
 
-import com.example.daykm.daggerexample.dagger.component.AppComponent;
-import com.example.daykm.daggerexample.dagger.component.DaggerAppComponent;
-import com.example.daykm.daggerexample.dagger.modules.AppModule;
+import com.example.daykm.daggerexample.BuildConfig;
+
+import timber.log.Timber;
 
 
 public class App extends Application {
 
     private static AppComponent appComponent;
 
-    @Override public void onCreate() {
+    @Override
+    public void onCreate() {
         super.onCreate();
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
         appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
     }
 
-
     public static AppComponent appComponent() {
         if (appComponent == null) {
-            Log.e("App", "This app context is invalid");
+            Timber.e("This app context is invalid");
         }
         return appComponent;
     }

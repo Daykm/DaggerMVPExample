@@ -10,37 +10,51 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        jackOptions {
-            enabled true
-            jackInProcess false
-        }
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled = true
+            useProguard = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         buildTypes.each {
-            if (hasProperty('OpenWeatherAPIKey')) {
-                it.buildConfigField 'String', 'API_KEY', OpenWeatherAPIKey
-            } else {
-                it.buildConfigField 'String', 'API_KEY', "\"Dummy Key\""
-            }
+            it.buildConfigField 'String', 'API_KEY', apiKey
         }
     }
 }
 
+ext {
+    // dependency versions
+    supLib = '25.1.0'
+    retrofit = '2.1.0'
+    dagger = '2.7'
+    okhttp = '3.4.1'
+    rxAndroid = '1.2.1'
+    epoxy = '1.5.0'
+    butterknife = '8.4.0'
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.android.support:appcompat-v7:$supLib"
+    compile "com.android.support:design:$supLib"
+    compile "com.squareup.retrofit2:retrofit:$retrofit"
+    compile "com.squareup.retrofit2:converter-moshi:$retrofit"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofit"
+    compile "io.reactivex:rxandroid:$rxAndroid"
+    compile "com.google.dagger:dagger:$dagger"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
+    compile "com.airbnb.android:epoxy:$epoxy"
+    compile "com.jakewharton:butterknife:$butterknife"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
+    compile 'com.jakewharton.timber:timber:4.3.1'
+
+
+    testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:design:25.0.1'
-    compile 'com.google.dagger:dagger:2.7'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.7'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-moshi:2.1.0'
-    compile 'com.jakewharton.timber:timber:4.3.1'
-    testCompile 'junit:junit:4.12'
 }

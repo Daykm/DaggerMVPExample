@@ -1,4 +1,4 @@
-package com.example.daykm.daggerexample.dagger.scopes;
+package com.example.daykm.daggerexample.features.app.scopes;
 
 
 import javax.inject.Scope;

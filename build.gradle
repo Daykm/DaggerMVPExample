@@ -12,6 +12,16 @@ buildscript {
     }
 }
 
+// load the api key through api.properties
+try {
+    def prop = new Properties()
+    prop.load(new FileInputStream(this.file("api.properties")))
+    extensions.add("apiKey", prop['apiKey'])
+} catch (Exception e) {
+    this.project.extensions.add("apiKey", "null")
+    logger.log(LogLevel.ERROR, "Could not load properties", e)
+}
+
 allprojects {
     repositories {
         jcenter()
