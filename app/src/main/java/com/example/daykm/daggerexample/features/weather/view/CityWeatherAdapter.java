@@ -16,7 +16,7 @@ import rx.functions.Func1;
 
 public class CityWeatherAdapter extends EpoxyAdapter {
 
-    WeatherPresenter presenter;
+    private WeatherPresenter presenter;
 
     @Inject
     public CityWeatherAdapter(WeatherPresenter presenter) {

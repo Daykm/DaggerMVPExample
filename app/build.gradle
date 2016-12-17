@@ -11,10 +11,21 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        release {
+            storeFile project.file("default.jks")
+            storePassword "password"
+            keyAlias "example"
+            keyPassword "password"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
+            useProguard = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled = true

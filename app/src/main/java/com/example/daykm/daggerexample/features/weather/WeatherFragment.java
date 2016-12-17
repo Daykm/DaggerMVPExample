@@ -1,7 +1,6 @@
 package com.example.daykm.daggerexample.features.weather;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,18 +31,12 @@ public class WeatherFragment extends Fragment implements WeatherContract.View {
     CityWeatherAdapter adapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        ButterKnife.bind(this, inflater.inflate(R.layout.fragment_weather, container, false));
-        recycler.setAdapter(adapter);
-        return recycler;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle saveState) {
         App.appComponent().inject(this);
         presenter.attach(this);
+        ButterKnife.bind(this, inflater.inflate(R.layout.fragment_weather, parent, false));
+        recycler.setAdapter(adapter);
+        return recycler;
     }
 
     @Override
