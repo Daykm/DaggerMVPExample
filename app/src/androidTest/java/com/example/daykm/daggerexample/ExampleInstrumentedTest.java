@@ -10,7 +10,7 @@ import com.example.daykm.daggerexample.data.remote.City;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -29,7 +29,7 @@ public class ExampleInstrumentedTest {
     @Test
     public void testParseCities() throws Exception {
 
-        for(City city : new CityRepository(InstrumentationRegistry.getTargetContext()).getCities()) {
+        for (City city : new CityRepository(InstrumentationRegistry.getTargetContext()).getCities().toBlocking().first()) {
             System.out.println(city.name + " " + city.id);
         }
 

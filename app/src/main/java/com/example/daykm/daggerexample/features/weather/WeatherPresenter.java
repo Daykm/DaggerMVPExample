@@ -3,22 +3,26 @@ package com.example.daykm.daggerexample.features.weather;
 import com.example.daykm.daggerexample.data.CityRepository;
 import com.example.daykm.daggerexample.data.OpenWeatherService;
 import com.example.daykm.daggerexample.data.remote.City;
+import com.example.daykm.daggerexample.features.app.scopes.FragmentScoped;
+import com.example.daykm.daggerexample.features.weather.view.model.CityModel;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import retrofit2.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action2;
+import rx.functions.Func0;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
+@FragmentScoped
 public class WeatherPresenter implements WeatherContract.Presenter {
 
     private WeatherContract.View view;
@@ -30,8 +34,13 @@ public class WeatherPresenter implements WeatherContract.Presenter {
 
     private CompositeSubscription subscriptions = new CompositeSubscription();
 
+    private Observable<City> originalCities;
+
+    private Observable<City> filtertedCities;
+
     @Inject
     public WeatherPresenter(CityRepository cityRepo, OpenWeatherService weatherService) {
+        Timber.i("Creating Presenter");
         this.cityRepo = cityRepo;
         this.weatherService = weatherService;
     }
@@ -40,8 +49,9 @@ public class WeatherPresenter implements WeatherContract.Presenter {
     public void attach(WeatherContract.View view) {
         this.view = view;
 
-        subscriptions.add(Observable.<Void>just(null)
-                .observeOn(AndroidSchedulers.mainThread())
+        final WeatherContract.View viewRef = view;
+
+        originalCities = Observable.<Void>just(null)
                 .map(new Func1<Void, Void>() {
                     @Override
                     public Void call(Void aVoid) {
@@ -49,14 +59,32 @@ public class WeatherPresenter implements WeatherContract.Presenter {
                         return null;
                     }
                 })
-                .switchMap(new Func1<Void, Observable<List<City>>>() {
+                .observeOn(AndroidSchedulers.mainThread())
+                .concatMap(new Func1<Void, Observable<City>>() {
                     @Override
-                    public Observable<List<City>> call(Void aVoid) {
-                        return Observable.just(cityRepo.getCities()).delay(1, TimeUnit.SECONDS)
-                                .observeOn(AndroidSchedulers.mainThread());
+                    public Observable<City> call(Void aVoid) {
+                        return cityRepo.getCities();
                     }
-                })
-                .subscribe(new Subscriber<List<City>>() {
+                }).observeOn(Schedulers.io());
+
+        filtertedCities = originalCities.filter(new Func1<City, Boolean>() {
+            @Override
+            public Boolean call(City city) {
+                return "US".equals(city.country);
+            }
+        });
+        filtertedCities.collect(new Func0<ArrayList<CityModel>>() {
+            @Override
+            public ArrayList<CityModel> call() {
+                return new ArrayList<>();
+            }
+        }, new Action2<ArrayList<CityModel>, City>() {
+            @Override
+            public void call(ArrayList<CityModel> cityModels, City city) {
+                cityModels.add(new CityModel(city));
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<CityModel>>() {
                     @Override
                     public void onCompleted() {
 
@@ -64,15 +92,15 @@ public class WeatherPresenter implements WeatherContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        Timber.e(e, "Could not load list of cities");
-                        WeatherPresenter.this.view.finishLoadingCities(Collections.<City>emptyList());
+
                     }
 
                     @Override
-                    public void onNext(List<City> cities) {
-                        WeatherPresenter.this.view.finishLoadingCities(cities);
+                    public void onNext(List<CityModel> models) {
+                        viewRef.finishLoadingCities(models);
                     }
-                }));
+                });
+
     }
 
     @Override

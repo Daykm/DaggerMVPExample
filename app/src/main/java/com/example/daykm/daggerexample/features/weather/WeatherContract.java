@@ -1,7 +1,7 @@
 package com.example.daykm.daggerexample.features.weather;
 
 
-import com.example.daykm.daggerexample.data.remote.City;
+import com.example.daykm.daggerexample.features.weather.view.model.CityModel;
 
 import java.util.List;
 
@@ -9,7 +9,8 @@ public interface WeatherContract {
 
     interface View {
         void startLoadingCities();
-        void finishLoadingCities(List<City> cities);
+
+        void finishLoadingCities(List<CityModel> cities);
     }
 
     interface Presenter {

@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.daykm.daggerexample.R;
-import com.example.daykm.daggerexample.data.remote.City;
 import com.example.daykm.daggerexample.features.app.App;
 import com.example.daykm.daggerexample.features.weather.view.CityWeatherAdapter;
+import com.example.daykm.daggerexample.features.weather.view.model.CityModel;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class WeatherFragment extends Fragment implements WeatherContract.View {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle saveState) {
-        App.appComponent().inject(this);
+        App.appComponent().weather().inject(this);
         presenter.attach(this);
         ButterKnife.bind(this, inflater.inflate(R.layout.fragment_weather, parent, false));
         recycler.setAdapter(adapter);
@@ -51,7 +51,7 @@ public class WeatherFragment extends Fragment implements WeatherContract.View {
     }
 
     @Override
-    public void finishLoadingCities(List<City> cities) {
+    public void finishLoadingCities(List<CityModel> cities) {
         adapter.stopLoading();
         adapter.setCities(cities);
     }

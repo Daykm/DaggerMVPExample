@@ -62,7 +62,7 @@ dependencies {
     compile "com.jakewharton:butterknife:$butterknife"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
     compile 'com.jakewharton.timber:timber:4.3.1'
-
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
