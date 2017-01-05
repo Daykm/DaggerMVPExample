@@ -12,7 +12,6 @@ import com.squareup.moshi.Types;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -29,19 +28,8 @@ public class CityRepository {
 
     private JsonAdapter<List<City>> adapter;
 
-    Observable test = Observable.interval(10, TimeUnit.SECONDS).concatMap(new Func1<Long, Observable>() {
-        @Override
-        public Observable call(Long aLong) {
-            return Observable.fromCallable(new Callable<String>() {
-                @Override
-                public String call() throws Exception {
-                    return "This string on an interval of 10 seconds";
-                }
-            });
-        }
-    });
 
-    Observable<City> citiesObservable =
+    Observable<List<City>> citiesObservable =
             Observable.fromCallable(new Callable<List<City>>() {
                 @Override
                 public List<City> call() throws Exception {
@@ -58,11 +46,6 @@ public class CityRepository {
                     Timber.e(throwable, "Could not load list of cities");
                     return Collections.emptyList();
                 }
-            }).flatMapIterable(new Func1<List<City>, Iterable<City>>() {
-                @Override
-                public Iterable<City> call(List<City> cities) {
-                    return cities;
-                }
             }).subscribeOn(
                     Schedulers.io()
             ).cache();
@@ -74,7 +57,7 @@ public class CityRepository {
         this.context = context;
     }
 
-    public Observable<City> getCities() {
+    public Observable<List<City>> getCities() {
         return citiesObservable;
     }
 
