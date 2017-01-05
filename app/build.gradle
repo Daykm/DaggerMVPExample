@@ -55,6 +55,7 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$retrofit"
     compile "com.squareup.retrofit2:converter-moshi:$retrofit"
     compile "com.squareup.retrofit2:adapter-rxjava:$retrofit"
+    compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
     compile "io.reactivex:rxandroid:$rxAndroid"
     compile "com.google.dagger:dagger:$dagger"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger"

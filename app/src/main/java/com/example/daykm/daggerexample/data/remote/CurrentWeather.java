@@ -6,7 +6,7 @@ public class CurrentWeather {
     @Json(name="coord")
     public Coordinate coordinate;
     @Json(name = "weather")
-    public Weather weather;
+    public Weather[] weather;
     @Json(name = "base")
     public String base;
     @Json(name = "main")

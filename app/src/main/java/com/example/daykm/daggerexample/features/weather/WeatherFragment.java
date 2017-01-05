@@ -2,12 +2,15 @@ package com.example.daykm.daggerexample.features.weather;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.daykm.daggerexample.R;
+import com.example.daykm.daggerexample.data.remote.City;
+import com.example.daykm.daggerexample.data.remote.CurrentWeather;
 import com.example.daykm.daggerexample.features.app.App;
 import com.example.daykm.daggerexample.features.weather.view.CityWeatherAdapter;
 import com.example.daykm.daggerexample.features.weather.view.model.CityModel;
@@ -35,6 +38,9 @@ public class WeatherFragment extends Fragment implements WeatherContract.View {
         App.appComponent().weather().inject(this);
         presenter.attach(this);
         ButterKnife.bind(this, inflater.inflate(R.layout.fragment_weather, parent, false));
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        manager.setStackFromEnd(true);
+        recycler.setLayoutManager(manager);
         recycler.setAdapter(adapter);
         return recycler;
     }
@@ -48,6 +54,21 @@ public class WeatherFragment extends Fragment implements WeatherContract.View {
     @Override
     public void startLoadingCities() {
         adapter.startLoading();
+    }
+
+    @Override
+    public void stopLoadingCities() {
+        adapter.stopLoading();
+    }
+
+    @Override
+    public void loadCity(City city) {
+        adapter.addCity(city);
+    }
+
+    @Override
+    public void loadDetailWeather(CurrentWeather body) {
+        adapter.addWeather(body);
     }
 
     @Override

@@ -1,9 +1,12 @@
 package com.example.daykm.daggerexample.features.weather.view;
 
 import com.airbnb.epoxy.EpoxyAdapter;
+import com.example.daykm.daggerexample.data.remote.City;
+import com.example.daykm.daggerexample.data.remote.CurrentWeather;
 import com.example.daykm.daggerexample.features.weather.WeatherPresenter;
 import com.example.daykm.daggerexample.features.weather.view.model.CityModel;
 import com.example.daykm.daggerexample.features.weather.view.model.RecyclerViewLoadingModel;
+import com.example.daykm.daggerexample.features.weather.view.model.WeatherModel;
 
 import java.util.List;
 
@@ -35,4 +38,11 @@ public class CityWeatherAdapter extends EpoxyAdapter {
     }
 
 
+    public void addCity(City city) {
+        addModel(new CityModel(city));
+    }
+
+    public void addWeather(CurrentWeather body) {
+        addModel(new WeatherModel(body));
+    }
 }
