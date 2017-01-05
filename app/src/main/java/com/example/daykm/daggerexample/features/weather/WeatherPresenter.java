@@ -7,17 +7,19 @@ import com.example.daykm.daggerexample.data.remote.CurrentWeather;
 import com.example.daykm.daggerexample.features.app.scopes.FragmentScoped;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 @FragmentScoped
@@ -27,7 +29,7 @@ public class WeatherPresenter implements WeatherContract.Presenter {
     private CityRepository cityRepo;
     private OpenWeatherService weatherService;
 
-    private CompositeSubscription subscriptions = new CompositeSubscription();
+    private CompositeDisposable subscriptions = new CompositeDisposable();
 
     @Inject
     public WeatherPresenter(CityRepository cityRepo, OpenWeatherService weatherService) {
@@ -44,73 +46,65 @@ public class WeatherPresenter implements WeatherContract.Presenter {
     public void attach(WeatherContract.View view) {
         this.view = view;
 
-        final WeatherContract.View viewRef = view;
-
-        subscriptions.add(Observable.<Void>just(null)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Void, Void>() {
+        Observable<City> observable = Observable.defer(
+                new Callable<ObservableSource<List<City>>>() {
                     @Override
-                    public Void call(Void aVoid) {
+                    public ObservableSource<List<City>> call() throws Exception {
                         WeatherPresenter.this.view.startLoadingCities();
-                        return null;
+                        return cityRepo.getCities().subscribeOn(Schedulers.io());
                     }
                 })
-                .subscribeOn(Schedulers.io())
-                .concatMap(new Func1<Void, Observable<List<City>>>() {
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Consumer<List<City>>() {
                     @Override
-                    public Observable<List<City>> call(Void aVoid) {
-                        return cityRepo.getCities();
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).doOnNext(new Action1<List<City>>() {
-                    @Override
-                    public void call(List<City> cities) {
+                    public void accept(List<City> cities) throws Exception {
                         WeatherPresenter.this.view.stopLoadingCities();
                     }
-                }).subscribeOn(Schedulers.computation()).flatMapIterable(new Func1<List<City>, Iterable<City>>() {
+                }).subscribeOn(Schedulers.computation()).flatMapIterable(new Function<List<City>, Iterable<City>>() {
                     @Override
-                    public Iterable<City> call(List<City> cities) {
+                    public Iterable<City> apply(List<City> cities) {
                         return cities;
                     }
-                }).filter(new Func1<City, Boolean>() {
-                    @Override
-                    public Boolean call(City city) {
-                        return "US".equals(city.country);
-                    }
-                }).concatMap(new Func1<City, Observable<? extends City>>() {
-                    @Override
-                    public Observable<? extends City> call(City city) {
-                        logThread();
-                        return Observable.just(city).subscribeOn(AndroidSchedulers.mainThread()).delay(2, TimeUnit.SECONDS);
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).doOnNext(new Action1<City>() {
-                    @Override
-                    public void call(City city) {
-                        WeatherPresenter.this.view.loadCity(city);
-                    }
-                }).concatMap(new Func1<City, Observable<Response<CurrentWeather>>>() {
-                    @Override
-                    public Observable<Response<CurrentWeather>> call(City city) {
-                        return WeatherPresenter.this.weatherService.currentWeatherForCity(city.id).sample(500, TimeUnit.MILLISECONDS);
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).doOnNext(new Action1<Response<CurrentWeather>>() {
-                    @Override
-                    public void call(Response<CurrentWeather> currentWeatherResponse) {
-                        if (currentWeatherResponse.isSuccessful()) {
-                            WeatherPresenter.this.view.loadDetailWeather(currentWeatherResponse.body());
-                        }
-                    }
-                }).doOnError(new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Timber.e(throwable, "Argh");
-                    }
-                }).subscribe());
+                }).take(5);
+
+        subscriptions.add(Observable.concat(
+                observable.take(1),
+                observable.skip(1)
+                        .concatMap(new Function<City, ObservableSource<? extends City>>() {
+                            @Override
+                            public ObservableSource<? extends City> apply(City city) throws Exception {
+                                return Observable.just(city).subscribeOn(AndroidSchedulers.mainThread()).delay(2, TimeUnit.SECONDS);
+                            }
+                        })
+        ).observeOn(AndroidSchedulers.mainThread()).doOnNext(new Consumer<City>() {
+            @Override
+            public void accept(City city) throws Exception {
+                WeatherPresenter.this.view.loadCity(city);
+            }
+        }).concatMap(new Function<City, Observable<Response<CurrentWeather>>>() {
+            @Override
+            public Observable<Response<CurrentWeather>> apply(City city) {
+                return WeatherPresenter.this.weatherService.currentWeatherForCity(city.id);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).doOnNext(new Consumer<Response<CurrentWeather>>() {
+            @Override
+            public void accept(Response<CurrentWeather> currentWeatherResponse) throws Exception {
+                if (currentWeatherResponse.isSuccessful()) {
+                    WeatherPresenter.this.view.loadDetailWeather(currentWeatherResponse.body());
+                }
+            }
+        }).doOnError(new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                Timber.e(throwable, "Argh");
+            }
+        }).subscribe());
 
     }
 
     @Override
     public void detach() {
-        subscriptions.unsubscribe();
+        subscriptions.dispose();
     }
 }

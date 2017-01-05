@@ -15,10 +15,10 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import okio.Okio;
-import rx.Observable;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 @ApplicationScoped
@@ -40,9 +40,9 @@ public class CityRepository {
                     Timber.i("Parsing took %f ms", (end - start) * 1e-6d);
                     return cities;
                 }
-            }).onErrorReturn(new Func1<Throwable, List<City>>() {
+            }).onErrorReturn(new Function<Throwable, List<City>>() {
                 @Override
-                public List<City> call(Throwable throwable) {
+                public List<City> apply(Throwable throwable) {
                     Timber.e(throwable, "Could not load list of cities");
                     return Collections.emptyList();
                 }

@@ -39,7 +39,7 @@ public class WeatherFragment extends Fragment implements WeatherContract.View {
         presenter.attach(this);
         ButterKnife.bind(this, inflater.inflate(R.layout.fragment_weather, parent, false));
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        manager.setStackFromEnd(true);
+        recycler.setVerticalScrollBarEnabled(true);
         recycler.setLayoutManager(manager);
         recycler.setAdapter(adapter);
         return recycler;
