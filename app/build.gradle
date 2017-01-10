@@ -10,6 +10,14 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        jackOptions {
+            enabled true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     signingConfigs {
@@ -23,14 +31,10 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            useProguard = false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
         debug {
-            minifyEnabled = true
-            useProguard = false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
         }
         buildTypes.each {
             it.buildConfigField(String.class.getSimpleName(), 'API_KEY', apiKey)
@@ -42,7 +46,7 @@ ext {
     // dependency versions
     supLib = '25.1.0'
     retrofit = '2.1.0'
-    dagger = '2.7'
+    dagger = '2.8'
     okhttp = '3.4.1'
     rxAndroid = '2.0.1'
     epoxy = '1.5.0'
